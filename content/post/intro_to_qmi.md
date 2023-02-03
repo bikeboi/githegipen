@@ -1,5 +1,5 @@
 ---
-title: "Quadratic Mutual Information in brief"
+title: "Quadratic Mutual Information (in brief)"
 date: 2023-02-01
 draft: false
 math: true

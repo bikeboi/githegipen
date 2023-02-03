@@ -2,14 +2,14 @@
 #+author:
 #+options: ^:nil _:nil
 
-#+hugo_base_dir: ~/Writing/science-blog/
+#+hugo_base_dir: ~/Writing/science-blog
 #+hugo_section: post
 #+hugo_front_matter_format: yaml
 
 #+macro: sidenote @@hugo:{{<sidenote>}}$1{{</sidenote>}}@@
 #+macro: margin @@hugo:{{<sidenote>}}$1{{</sidenote>}}@@
 
-* Quadratic Mutual Information in brief
+* Quadratic Mutual Information (in brief)
 :PROPERTIES:
 :export_file_name: intro_to_qmi
 :export_date: 2023-02-01
