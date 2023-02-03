@@ -5,6 +5,7 @@ title = "Githegi's Pen"
 
 [params]
 subtitle = "Essays and articles about things that interest me"
+github = "bikeboi"
 
 # --
 # Navigation
@@ -21,4 +22,14 @@ me = "Posts"
 pre = "<i class='fas fa-book la-lg'></i>"
 weight = -100
 identifier = "posts"
-url = "/posts"
+url = "/post"
+
+# --
+# Footer
+# --
+[[menu.footer]]
+  name = ""
+  pre = "<i class='fab fa-linkedin fa-lg'></i> "
+  weight = -90
+  identifier = "linkedin"
+  url = "https://www.linkedin.com/in/michael-githegi-kareithi/"
