@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'http://githegipen.dev'
 languageCode = 'en-gb'
 theme = 'hugo-tufte'
 title = "Githegi's Pen"
