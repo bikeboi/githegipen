@@ -3,7 +3,7 @@ title: "Quadratic Mutual Information in brief"
 date: 2023-02-01
 draft: false
 math: true
-draft: true
+draft: false
 ---
 
 Information theory is great -- in theory. In practice, many of the quantities are tricky to compute. Most of them revolve around entropy

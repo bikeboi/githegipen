@@ -13,7 +13,7 @@
 :PROPERTIES:
 :export_file_name: intro_to_qmi
 :export_date: 2023-02-01
-:export_hugo_custom_front_matter: :math true :draft true
+:export_hugo_custom_front_matter: :math true :draft false
 :export_hugo_paired_shortcodes: sidenote
 :END:
 #+begin_comment
