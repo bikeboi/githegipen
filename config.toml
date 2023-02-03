@@ -1,0 +1,24 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-gb'
+theme = 'hugo-tufte'
+title = "Githegi's Pen"
+
+[params]
+subtitle = "Essays and articles about things that interest me"
+
+# --
+# Navigation
+# --
+[[menu.nav]]
+me = "Home"
+pre = "<i class='fas fa-home la-lg'></i>"
+weight = -110
+identifier = "home"
+url = "/"
+
+[[menu.nav]]
+me = "Posts"
+pre = "<i class='fas fa-book la-lg'></i>"
+weight = -100
+identifier = "posts"
+url = "/posts"
