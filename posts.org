@@ -2,7 +2,7 @@
 #+author:
 #+options: ^:nil _:nil
 
-#+hugo_base_dir: ~/Writing/science-blog
+#+hugo_base_dir: ~/Writing/githegipen
 #+hugo_section: post
 #+hugo_front_matter_format: yaml
 
@@ -13,7 +13,7 @@
 :PROPERTIES:
 :export_file_name: intro_to_qmi
 :export_date: 2023-02-01
-:export_hugo_custom_front_matter: :math true :draft false
+:export_hugo_custom_front_matter: :math true :draft true
 :export_hugo_paired_shortcodes: sidenote
 :END:
 #+begin_comment
@@ -140,3 +140,96 @@ Though useful so far, QMI, as far as I can tell, seems to be relatively untapped
 [4] Mu, Z., Nikolic, K., Schultz, S.R. (2021). /Quadratic Mutual Information estimation of mouse dLGN receptive fields reveals asymmetry between ON and OFF visual pathways./
 
 [5] Katz, M., Viney, T., Nikolic, K. (2016). /Receptive Field Vectors of Genetically-Identified Retinal Ganglion Cells Reveal Cell-Type-Dependent Visual Functions./
+
+* Thinking with subspaces
+:PROPERTIES:
+:export_file_name: thinking_with_subspaces
+:export_date: 2025-02-16
+:export_hugo_custom_front_matter: :math true :draft true
+:export_hugo_paired_shortcodes: sidenote
+:END:
+In the first chapter of the book [[https://www.google.co.uk/books/edition/From_Vector_Spaces_to_Function_Spaces/hXt_wSTNhb0C?hl=en][From Vector Spaces to Function Spaces]] its
+author Yutaka Yamamoto makes this statement (on the reason we generalise the
+usual intuitive notion of a "vector" as a list of numbers to something more abstract):
+
+#+BEGIN_QUOTE
+... such a situation is entirely standard in modern mathematics, especially in
+algebra. Since we deal more with operations and structures induced from them,
+the peculiarity of an individual element becomes, inevitably, less significant
+than the totality that constitutes the entire structure.
+#+END_QUOTE
+The phrase "operations and structures induced from them" opened a door in my
+mind.
+
+When I thought of math, I would think of the process of beginning from axioms or
+desirable properties and discovering the ensuing tree of logical
+relationships; /understanding/ in this case thus meant knowing what implies what,
+and under what conditions.
+
+But this phrase helped me zoom out and see learning math as understanding the
+/shape/ of this logical structure; looking for recurring patterns in this shape.
+This is the difference between knowing how to climb a tree and being able to
+paint a pretty good picture of it. You've got to do both---in fact the two are
+synergistic.
+
+But today I want to do more than climb. I want to look at the first few, simple
+branches of a vast and complex tree, many of whose leaves I still glance up
+humbly at and hope to climb: the tree of Linear Algebra. Or, more precisely, of
+finite-dimensional vector spaces. A tree whose base you can scale through the
+early chapters of any good textbook on the subject; and which, in climbing,
+you'll encounter the fundamental notion we're concerned with today: that of a
+_subspace_.
+
+My objective here is to not just understand what a subspace is, but to see the
+forest for the trees, so to speak---to arrive at a more intuitive pattern for
+understanding just what the heck this linear algebra business is about.
+
+** Span
+Let's start with a simple object \(v\). We'll call this object a vector, but
+only for reasons which will become clear later. For now the object has no
+properties, and is necessarily nothing. It's not a list of numbers, it's not a
+function, it's not a sequence---it could potentially be any of these things but
+what it is doesn't matter for our purposes. We begin with a totally abstract
+object \(v\) and go from there.
+
+Let's pick a [[https://en.wikipedia.org/wiki/Field_(mathematics)][field]] \(F\), and define another vector \(u = \alpha v\), where \(\alpha\in F\).
+In fact let's define a whole set of such objects \(S_v = \{ \alpha v: \alpha\in F \}\}\) for
+every field member. We call this set the "span" of \(v\).
+
+[WE NEED TO HAVE DISTRIBUTIVITY TO PROCEED]
+
+Now we notice the following two interesting properties.
+
+First, \(S_v\) contains all scalar multiplications[fn::I know we haven't
+properly defined scalar multplication but I will] of itself. This is trivial,
+since if we consider any \(u=\alpha v\) we see that \(\beta u =(\beta\alpha)v\inS_v\), since
+\(S_v\) contains all scalar multiples of \(v\).
+
+Second, any weighted sum of two
+elements of \(S_v\) are contained in \(v\). For instance, let \(u_1=\alpha_1 v\) and
+\(u_2=\alpha_2v\). We see that \(u_1+u_2=(\alpha_1+\alpha_2)v\in S_v\). In general, any finite
+sum of elements \(u_k=\alpha_kv\) for \(k=1,...,n\) is in \(S_v\) since
+\[
+u_1+u_2+\vdots+u_n = (\alpha_1+\alpha_2+\vdots+\alpha_n)v.
+\]
+
+So we have this special set defined w/r/t an object \(v\) that contains all
+scalar multiples of \(v\) and, as we've shown, necessarily contains all sums and
+scalar multiples of any of its elements.
+
+[WE@VE UTILISED VECTOR SPACE PROPERTIES HERE WITHOUT DEFINING THEM LIKE DISTRIBUTIVITY]
+
+** Combining Spans
+Now say we have a second object \(w\). Like \(v\), we can create its span
+\(S_w\). The sets \(S_v\) and \(S_w\) are totally disjoint, since we don't have
+any meaningful notion of equality between \(v\) and \(w\); they're totally
+abstract objects.
+
+But, for no reason but pure curiosity, we can ask: can we "combine" these spaces
+somehow? Let's /define/ an element \(v+w\). To be clear, this is not the
+"addition" of \(v\) and \(w\) in any meaningful sense, like addition between
+reals or rationals is meaningful. The symbol \(+\) is used to suggest the
+relationship is /similar/ to a sum, but we don't know much about this relationship
+quite yet, since we're in the process of defining it.
+
+Let's call \(v+w\) a vector, same as \(v\) and \(w\).

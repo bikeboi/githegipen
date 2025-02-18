@@ -1,0 +1,400 @@
+#+title: Optimal Discretisation
+
+* Outline
+- What exactly does it mean for one thing to contain information /about/ another?
+- "Information Density" as the density of symbols in a particular region of the
+  probability domain.
+- Optimal discretisation as compression.
+- Encoding a document into numbers using our algorithm for optimal discretisation.
+
+* Draft
+** Prelude
+If you're anything like me, you're a fan of ill-posed philosophical questions
+that take away from time you could be doing actual work on your PhD. For
+example: what does it mean for one thing to have information /about/ another?
+    The rest of this post will be a journey starting from this abstract question
+and arriving at some pretty interesting practical insights the discretisation of
+continuous variables.
+    To start, we'll need to introduce some formal objects from probability
+theory.
+    A random variable (r.v.) \(X: \mathcal{X}\rightarrow\mathbb{R}\) is a function from the space
+of events \(\mathcal{X}\) to a probability value in \([0,1]\). We say a random
+variable is distributed according to a given probability-mass-function (PMF)
+\(P_X:x\mapsto[0,1]\) if it is discrete, or probability-density-function (PDF)
+\(p_X:x\mapsto[0,1]\) if it is continuous. For brevity we write \(P(x)\) and
+\(p(x)\) to mean the density of the r.v. \(X\), the lower-case symbol used for the event
+argument implying the random variable we're concerned with.
+    (ALT:) This post will assume a rudimentary knowledge of probability and a
+little information-theory: e.g. what a random variable is, what probability mass
+and density functions are.
+
+** Part II: Entropy, Information, and Observation
+_Information Entropy_ (henceforth simply "entropy") is a scalar value meant to
+capture the notion of uncertainty of a given random experiment/system/observation: anything
+we can model as a random variable. For example, the entropy of a coin toss is a
+measure of how uncertain we are about what side it'll land on.
+
+The entropy of a discrete random variable \(X\) is defined as
+$$
+H(X) = -\sum_{x\in\mathcal{X}} P(x)\log P(x)
+$$
+The base of the log determines the units: base-2 for bits, base-\(e\) for
+"nats", base-10 for "hartleys". Our logs for this post will be implicitly in
+base-2.
+
+For a fair coin toss, the space of outcomes is \(\{\mathrm{heads},
+\mathrm{tails}\}\), each with equal probability. Plugging these in gives us an
+entropy of one bit.
+
+Now _information_ is a much more subtle concept. It makes no sense to speak of
+information when considering only a single variable [fn:1]. Information must
+always be /about/ a particular thing, and the word "about" suggests to us that
+information must be a relationship between two things: one thing is informative
+about another if it reflects it in some way. It makes less sense---though we
+will do exactly this later on--to say something can be informative about /itself/.
+
+So if information is a quantity involving two things, we need to speak of two
+random variables. The next concept we introduce is _conditional entropy_. For two
+random variables \(X\) and \(Y\) their conditional entropy is
+\begin{align*}
+H(Y|X) &= \sum_{x\in\mathcal{X}}P(x) H(Y|X=x)\\
+\text{where}, H(Y|X=x) &= -\sum_{y\in\mathcal{Y}} P(y|x)\log P(y|x)
+\end{align}
+The inner term \(H(Y|X=x)\) is what we're most interested in. It is the entropy
+of the conditional distribution \(P(y|x)\). In other
+words, how much more certain (how much /less uncertain/) we are about \(X\) after
+we observe that \(Y\)'s outcome is \(y\): how much entropy /decreases/. I speak of
+how much /less/ because, as far as probability goes, the entropy \(H(X)\) of a
+random variable cannot be less than its conditional entropy \(H(X|Y)\) given any
+other random variable. In other words, observing the outcome of any other
+variable can only decrease your uncertainty about \(X\)! [Show Proof].
+
+This is a powerful idea. We may be tempted to generalise it to events in real-life,
+the universe, everything. However, we must remember that probability is just a
+model that sits on top of real-life complex and stochastic systems and allows us
+to make some inferences. It doesn't reflect the system's actual causal
+relationships (probability is famously acausal). We can easily come up with a
+real example where learning something new actually makes you /less/ certain about
+what you already knew (see upcoming blog post; observation can change support
+set? e.g. increase the number of colours we can select).
+
+In any case, if we average our post-outcome uncertainties for all possible
+outcomes of \(Y\), we get the conditional entropy: the expected entropy of \(X\)
+after we observe \(Y\). The difference between the entropy and conditional
+entropy tells us how much we expect our uncertainty about \(X\) to drop after
+observing \(Y\).
+
+As it turns out, the is this is exactly what information is; to be precise, Mutual
+Information (MI):
+$$
+I(X,Y) = H(X) - H(X|Y).
+$$
+Information is a kind of mirror-image of entropy and vice-versa. Uncertainty
+describes a state of knowledge; on observation of something, uncertainty may or
+may not change, but can only decrease; the amount by which we decrease is what
+we call information. Losing entropy means gaining information (in some putative
+observer), and the action connecting them is observation.[fn:2]
+
+** Part III: Information vs. Relatedness
+Now we return to our original question: what does it mean for \(Y\) to be
+informative about \(X\)? By our definitions above, it means that \(Y\) decreases
+in uncertainty after we observe \(X\). The amount by which it decreases is our
+measure of how informative \(Y\) is. [fn:3]
+
+But any nitpicker will quickly notice how unsatisfying this is. All we have to
+describe our events is probability theory: an acausal framework. Entropy and
+conditional entropy are measurements of probability densities, abstract
+mathematical objects which say nothing about cause or relatedness. If we infer
+that two objects which we model with random variables and find to have high MI
+are somehow /related/ in the physical world--i.e. the outcomes of one affect the
+outcomes of another--then we're making a causal statement. This should give you
+a stomachache.
+
+Surely we can think of a real-world example where two objects, modelled as
+random variables, have high MI but are not causally related?
+
+I have tried and failed. A decrease in entropy, no matter what way I slice it,
+seems to imply some kind of causal relationship.
+
+(NO:) actually this problem goes down to conditional probability. It may be that
+it can capture the notion of relatedness, but not its causal _direction_.
+
+** Part IV: A simple example
+Let's look at a practical, albeit contrived, example.
+
+Say you have two bags, A and B, with two balls each. You must make two actions in
+sequence. First: randomly select a bag. Second: randomly
+select a ball from the bag you picked. We'll model the choice of bag with random
+variable \(X\), where the set of outcomes is \(mathcal{X}=\{A, B\}\). And we'll
+model the ball we eventually select with the random variable \(Y\).
+
+*** Version 1
+In our first version of this experiment, bag A has one red and one green ball,
+and bag B has one blue and one white ball. Our possible ball outcomes are
+\(\mathcal{Y}=\{r, g, b, w\}\). The conditional distribution of \(Y\) is as shown:
+
+| x          | A   | B   |
++------------+-----+-----+
+| P(Y=r|X=x) | 1/2 | 0   |
+| P(Y=g|X=x) | 1/2 | 0   |
+| P(Y=b|X=x) | 0   | 1/2 |
+| P(Y=w|X=x) | 0   | 1/2 |
+
+The joint distribution is disjoint along \(X\); no outcomes are shared between
+the two bags. We pick this for our first example because this is a perfect case
+where the uncertainty in \(Y\) is chopped exactly in half depending on the
+outcome of \(X\).
+
+Say we're concerned with the final outcome: that is, which ball we finally pick.
+We have no knowledge of anything but the set of possible colours we could arrive
+on, and they are all equiprobable. The entropy of our variable at this stage is
+\(H(Y)=2\:\text{bits}\).
+
+Now we make a decision about what bag to select from ("observe" X). If we pick
+bag \(A\) the set of possible outcomes shrinks to \(\{r, g\}\), and if we pick
+bag \(B\) our set of outcomes shrinks to \(\{b, w\}\). That is, we now have half
+as many outcomes as originally, and they're all still equiprobable. This is
+reflectde in our conditional entropy: \(H(Y|X)=1\:\text{bit}\). Plugging these
+values into our earlier expression for Mutual Information, we see that variable
+\(X\) provides \(I(X,Y) = H(Y) - H(Y|X) = 2 - 1 = 1\:\text{bit}\) of information
+about \(Y\).
+
+We're less uncertain about \(Y\) after we observe \(X\). Before a choice of
+\(X\) was made, any of four outcomes was possible. But after the outcome of
+\(X\) was determined---after we chose a bag---the set of outcomes shrank in
+half, thus the uncertainty shrank in half.
+
+*** Version 2
+For our second version of this experiment, we'll have bag \(A\) contain \(\{r,
+g, b\}\), and bag \(B\) contain only \(\{w\}\). What do we expect?
+
+Our initial (marginal) entropy remains unchanged, since we have the same number
+and distribution of potential outcomes before \(X\) is determined. But our
+conditional distribution has changed, and so will our conditional entropy. The
+former looks like this now:
+
+| x          | A   | B   |
++------------+-----+-----+
+| P(Y=r|X=x) | 1/3 | 0   |
+| P(Y=g|X=x) | 1/3 | 0   |
+| P(Y=b|X=x) | 1/3 | 0   |
+| P(Y=w|X=x) | 0   | 1   |
+
+Calculating our conditional entropy, we see it's \(H(Y|X) \approx 0.7925\:\text{bits}\), and the
+mutual information is \(I(X,Y)=H(Y)-H(Y|X)=2-0.7925=1.2075\:\text{bits}\). \(X\)
+provides more information about \(Y\) than before! This is confusing at first,
+but becomes less so when we look at the individual conditional entropies for
+each outcome of \(X\).
+
+The overall conditional entropy is the average "local"/individual conditional
+entropies for each outcome of \(X\):
+\begin{equation}\label{eqn:cond2}
+H(Y|X) = \mathbb{E}_X[H(Y|X=x)] = \sum_{x\in\mathcal{X}} P(x)H(Y|X=x)
+\end{equation}
+For our problem above, our local conditional entropies are the entropies after
+picking bag A or bag B respectively[fn:: By convention, in information theory we
+let $$0\log 0=0$$ rather than be undefined like the result of the log. The
+arguments are usually made by saying $$x\log x\rightarrow0$$ as $$x\rightarrow 0$$]:
+\begin{align*}
+H(Y|X=A) = 3[\frac{1}{3}\log\frac{1}{3}] + 0\log0 \approx 1.584\\
+H(Y|X=B) = 3\cdot0 + 1 \log 1 = 0.
+\end{align*}
+Putting these together into (\ref{eqn:cond2}) we get \(H(Y|X) \approx 0.792\). When we
+pick \(B\) we minimise all uncertainty, since the only outcome is \(w\), and
+when we pick \(A\) we're slightly more uncertain than in the first example,
+since we have three to choose from rather than two. But the two effects average
+out and we get a slightly more informative \(X\) than before.[fn:4]
+
+*** Generalising
+For a better idea of how the relative sizes (number of balls in) bag \(A\) and
+bag \(B\) affect information between \(X\) and \(Y\), we can generalise this
+problem to a continuous version.
+
+Say we have an infinite number of potential colours to pick from. We'll label
+these with all the real numbers in the interval \([0, 1]\). We split this
+interval into two disjoint sections ("bags") at a given point \(\alpha\in(0,1)\). We
+then consider how informative the uniformly random choice of bag \(X\) is about
+the final choice of colour \(Y\). The parameter \(\alpha\) is what we vary to ask:
+how does \(I(X,Y)\) vary with \(\alpha\)?
+
+Let's define our random variables. Given a choice of \(\alpha\), the variable
+\(X\sim\mathcal{B}(f)\) will be Bernoulli-distributed, representing a random
+choice of either bag \(A\) or bag \(B\); \(f\) is the probability of selecting
+bag \(A\) and \(1-f\) of selecting bag \(B\). For this experiment we let them be
+equiprobable \((f=1/2)\). \(Y\sim\mathcal{U}(0, 1)\) is our choice of color,
+uniformly distributed in \([0,1]\). The conditional probabilities are
+\(p(y|X=A)\sim\mathcal{U}(0,\alpha)\) and \(p(y|X=B)\sim\mathcal{U}(\alpha,1)\), representing
+the subset of choices after we select either bag \(A\) or \(B\).
+
+We can work out our entropy values by hand. The entropy of a Bernoulli random
+variable is \(-f \log f - (1-f)\log(1-f)\). In our case, \(H(X)=1\:\text{bit}\).
+The /differential/ entropy of a uniform random variable \(\mathcal{U}(a,b)\) is \(\log(b-a)\).
+In our case, \(h(Y)=\log(1-0)=0.\) [We must reckon with negative entropy. Shall
+we use LDDP so that we can correctly combine it with entropy?]
+
+Do not be alarmed. This is part of the unintuitive nature of /differential
+entropy/, which is not the same as regular old entropy. To give a hand-wavy and
+incomplete argument: what we have in differential entropy is a /relative/ measure
+of uncertainty. Its absolute value, for our purposes, does not matter. We will
+see that everything works out to what we expect.
+
+The conditional entropies after each outcome of \(X\) are as follows:
+\begin{align*}
+h(Y|X=A) = \log (\alpha-0) = \log \alpha
+h(Y|X=B) = \log (1-\alpha)
+\end{align*}
+Combining these with the probabilities of each bag we have the overall
+conditional entropy:
+\begin{equation*}
+h(Y|X) = (1/2)h(Y|X=A) + (1/2)h(Y|X=B) = \frac{1}{2}[\log\alpha + \log(1-\alpha)] = \frac{1}{2}\log (\alpha-\alpha^2),
+\end{equation*}
+and finally our information value is:
+\begin{equation*}
+I(X,Y) = h(Y) - h(Y|X) = -\frac{1}{2}\log(\alpha-\alpha^2).
+\end{equation*}
+Notice that \(I(X,Y)\) is now a positive value.
+
+We can plot both these quantities as a function of \(\alpha\) to see what happens.
+
+#+CAPTION: Conditional-entropy and MI as a function of \alpha.
+#+ATTR_HTML: :width 500px
+#+ATTR_ORG: :width 500px
+[[file:~/Writing/githegipen/code/continous_partition_condent_mi.png]]
+
+Again, for conditional entropy what matters is the relative value. We see that
+conditional entropy, the uncertainty after observing \(X\), approaches its
+maximum value as we approach either \(0\) and \(1\) [fn::What happens when
+\(\alpha=0\) or \(\alpha=1\)?]. That is, whenever one of our "bags" gets very small
+relative to the other. Uncertainty is least reduced when the bag sizes are
+equal \((\alpha=1/2)\). Reflecting this: the information bag-outcome \(X\) provides about
+color-outcome \(Y\) is least when they are the same size, and most when there is
+a large discrepancy in their sizes.
+
+This matches what we found in our earlier, discrete example. The idea is the
+same: since conditional entropy is the entropy after each individual outcomes
+averaged over all outcomes, the near-total reduction in entropy after observing
+a very small bag pulls the average down.
+
+Think very visually about this. When we "observe" bag \(B\), we cut out all
+possible colors in bag \(A\). In other words, we remove all values \([0, \alpha]\)
+as possible outcomes. If \(\alpha\) is very close to \(1\), we remove nearly the
+entire interval \([0,1]\) after we observe bag \(B\); the entropy in this case
+is much less than \(h(Y)\). To be exact, \(h(Y|X=B) = \log (1-\alpha)\rightarrow-\infty\) as \(\alpha \rightarrow
+1\)), which we can show numerically:
+
+#+CAPTION: How \(log(1-\alpha\) tends as \(\alpha\rightarrow1\)
+#+ATTR_HTML: :width 500px
+#+ATTR_ORG: :width 500px
+[[file:~/Writing/githegipen/code/log_tend.png]]
+
+In contrast, as \(\alpha\rightarrow1\), we have \(h(Y|X=A) = \log(\alpha) \rightarrow \log(0)=1\). The much
+lower value of \(h(Y|X=B)\) outweighs \(h(Y|X=A)\) in the average, and we see
+\(h(Y|X)\) tend to negative infinity as either of the bag sizes shrinks to zero.
+
+To offer an intuitive explanation that connects back to our example: this tells
+us that if we want to distribute a set of uniquely colored balls into two bags
+for random selection such that the random choice of bag is most predictive about
+what choice we'll get, the smartest thing to do is to have one bag with
+(effectively) one color, and put the rest in the other. This makes intuitive
+sense: with one outcome (bag B) we'll be ~100% sure of what the colour will be; with
+the other outcome (bag A), we'll be as uncertain as we were before we knew what bag we
+were selecting from. These two average out with a bias towards the former.
+
+** Wrapping Up
+We've seen that information and uncertainty are two sides of the same coin.
+Losing uncertainty is gaining information, and uncertainty is a kind of
+"potential information", and the fact that entropy can only increase after
+observing the outcome of any other variable is a kind of conservation law: the
+sum of uncertainty and information (w/r/t the observed variable) is conserved.
+
+We've seen a discrete example, where observing what bag we must select from
+reduces the entropy of our final choice of colored ball, and we've generalised
+this to sampling values from a partitioned continuous interval.
+
+We can look at many variations of this problem: what if our bags/intervals
+overlap? what if hte choice of interval is not equiprobable. The two particular
+questions I'm most interested in are the following:
+- What happens if we have \(N\) bags, represented by \(N-1\) partitions of the
+  interval at values \(\alpha_1 < \alpha_2 < ... < \alpha_{n-1}\); what are the optimal values of
+  all the \(\alpha_k\)?
+- What if our choice of /color/ is not /a priori/ equiprobable? i.e. what if \(Y\)
+  is normally distributed on \(\[0, 1]\) for example? What partition scheme
+  would maximise the information between \(X\) and \(Y\)?
+
+With these questions, we begin to approach a problem that seems to be asking:
+how do we recode a continuous variable \(Y\) as a discrete one \(X\) while
+retaining as much information as possible?
+
+In a future post we will dig into this.
+
+
+*** The Limiting Density of Discrete Points
+
+
+
+** Part V: Implications for neural representations
+
+** Part VI: Spike-train encoding
+How might a neuron encode a sequence of values? (We assume they arrive at a
+fixed rate).
+- In the simplest case of a binary signal, a spike/no-spike encodes it.
+- With a signal with \(K\) values, a neuron might use a:
+  - Rate Code: Each signal is encoded with a different level of up to \(K\)
+    spikes. This puts a time-resolution limit on the code. If the rate at which
+    symbols arrives is less than it takes to spike at a given rate, the neuron
+    designer must decide how to allocate rates to symbols in a way that
+    minimises (inevitable) information loss. For example, more frequent symbols
+    could be allocated shorter codes and rare symbols longer codes. This means
+    we only rarely have to transmit at a high-rate and potentially lose
+    information following this plateau.
+  - ISI Code: With an ISI code, our delta-t floor is the duration of an action
+    potential, and the ceiling is the rate at which symbols arrive. The
+    action-potential duration acts like a unit of time and the incoming-symbol
+    rate is the space we have to fill with a pattern of spikes or no-spikes. If
+    we can fit \(n\) spikes/no-spikes within the window, then we can use at most
+    \(2^n\) symbols to communicate. This is much more than the rate-coding
+    allows; the latter begins to lose information when \(K > n\); the former
+    only does so if the entropy of the source signal is greater than \(\log n\).
+    This is all assuming a perfectly noiseless neuron.
+
+We can ask this same question if we're desigining \(M\) neurons:
+- Relative Rate Code: The burden of encoding a longer sequence of spikes can be
+  shunted off to the different neurons, and the information-loss limit should
+  decrease by some factor of how many neurons they are.
+
+An interesting question is whether a relative rate code can surpass
+single-neuron ISI for a reasonably small number of neurons. It obviously has a
+robustness advantage. ISI is very delicate.
+
+To incorporate noise we'll have to move from the source coding theorem to the
+noisy-channel coding theorem.
+
+
+* Footnotes
+[fn:1] The definition of entropy as average "self-information" feels circular:
+to use the word information here doesn't fit into any preconceived notions of
+what it means to be informative. The exposition I opt for here, to me at least,
+makes more sense.
+
+[fn:2] The questions "What is observing" and "what is observation" are not well-defined. We use natural
+language words like "uncertainty" and "information" to motivate axiomatic
+constructions of mathematical systems independent of them, then act shocked when
+philosophical problems arise. "Observation" here is just an intuitive term for a
+mathematical relationship between two probability density functions; the PDFs
+are mathematical objects with well-defined relationships, which include what we
+call "entropy" and "mutual information"; it's we as
+mathematicians/scientists/statisticians who then tack on the idea of
+before/after between these distributions, and call the movement between them
+"observation". What I'm saying is that the mathematical logic is sound, but the
+confusion arises from the "meaning-layer" we try to impose on top of it.
+
+[fn:3] Any nitpicker will immediately see how unsatisfying this is. The acausal
+nature of probability tells us that to be "informative" doesn't mean to have
+caused or even related to in a tangible way; there is no way to distinguish
+correlation from causation via information. But then we encounter a deeper
+question: is it possible for two experiments in the real-world to be highly
+mutually informative yet unrelated in any significant way. To answer this we
+need to define things like "related" and "significant".
+
+[fn:4] How would this shake out if we were twice as likely to pick bag \(B\) than
+bag \(A\)? What would our conditional entropy be? What would mutual information be?

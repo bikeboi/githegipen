@@ -1,0 +1,112 @@
+#+title: Not Seeing
+
+* Draft #1
+There's a notion in many old children's books and fairy tales, I don't remember
+which, of magic being something that exists all around us at all times, we
+simply do not notice it. This is not some metaphorical statement for a "real
+grown-up" to fawn over the whimsy of, to ironically smile at, smug at their own
+indulgence in what, at the end of the day, they consider unserious. I mean real
+magic. I mean people suddenly disappearing, cats talking, a weightless woman
+falling into the sky, and fairy-folk kidnapping unassuming butlers to be their
+king. The blind, 'grown up' way of seeing the world accretes, through Habit,
+like an opaque crust, veiling the endless possibilities
+of the real world with a sense of certainty.
+
+Whether this is true or not is best determined
+in conversation with a proper child; this is not relevant here. What's relevant
+is what the idea highlights, a more general notion, something important,
+something as difficult to keep in the front of one's mind as the act of putting
+one leg in front of the other: the fact that we /look/ but do not /see/.
+
+** The effect of habit
+In the film /My Dinner With Andre/ the latter bit of the conversation involves
+Andre describing how, habit, the inevitable lessening of attention paid to
+actions done again and again, day in and day out, leads to an /overall/ state of
+reduced attention in all life, for all things. The involuntary act of aging, of
+seeing recurrences in life, and the tendency to take less risks when older,
+means a combination of growing expectation and shrinking novelty of experience.
+
+#+begin_quote
+I mean it's a very frightening thing Wally to have to suddenly realise that, my
+God, I thought I was living my life but, in fact, I haven't been a human being!
+I've been a performer! I haven't been living, I've been acting; I've acted the
+role of the father, I've acted the role of the husband, I've acted the role of
+the friend, I've acted the role of the writer, director, what-have-you --- I've
+lived in the same room with [my wife] but I haven't really seen them, I
+haven't really heard them, I haven't really been _with_ them.
+#+end_quote
+
+A similar notion arises in Sartre and De Beauvoir's existentialism: de Beauvoir's "serious
+man" accepts an externally-imposed absolute reality which circumscribes his
+action and, in time, even his thought, in an effort to dispel the ambiguity of
+human existence, the ambiguity that is the placement of a soul/mind of infinite
+potential within the finite vessel of a body; moreover, a body embedded in a
+societal context, with its cocktail of prejudices imposing their own constraint
+on the individual soul even harsher than that of the bodies biology.
+
+Some insight here then: we don't see because we choose /not/ to see, in choosing
+not to truly be but to /act as if/ one is being; it's easier to adopt the "role"
+of Writer, Director, Doctor, Lawyer, Mother, than it is to accept the
+responsibility of having to cultivate a self at each and every moment of your
+life: the responsibility of freedom. These external pressures of conformity[fn:1] synergise
+with the tendency of habit and, when we acquiesce, freeze and make rote the /act/
+of life and the result is a lack of vision. Quite literal: considering how much
+of perception is a synergy between prior beliefs and sensory data [CITE], the
+former can bias so strongly the latter, that, as Proust described:
+
+#+begin_quote
+One's long-standing mental image of others deprives one of sight and hearing in
+their presence -- my mother took three years to notice the lip-stick that one of
+her nieces was using; for all she could see, it might have been totally and
+invisibly dissolved, till the day when either an extra dab of it or some other
+cause brought about the reaction known as supersaturation: all the unseen
+lip-stick crystallized and, in the face of this sudden splash of colour, my
+mother declared, after the manner of Combray, that it was a disgrace, and all
+but broke off relations with the girl.
+-- REF
+#+end_quote
+
+** The paradox of imagination
+*** Imagining that blinds
+Another, different, yet not entirely unrelated, way in which we fail to see is
+when we delude ourselves, constructing entities with complex intentions and
+inner lives, and relating to them as we would their would-be counterparts in the
+real world.
+
+Most obvious of example is bigotry, hate: when a myth so strongly embeds itself
+in the mind that the afflicted finds themselves capable of genuinely hating
+another human being; the point being that it takes an inability to see someone
+as a human being for hate to truly be felt. Racism, misogyny, xenophobia: all
+these result from an illusion of being constructed in place of the actual human
+beings, the latter then suffering all the effects directed towards the former.
+
+A less obvious and much more common example is illusion in love:
+
+#+begin_quote
+No doubt, few people understand either the purely subjective nature of the
+phenomenon of love, or how it creates a supplementary person who is quite
+different from the one who bears our beloved's name in the outside world, and is
+mostly formed from elements within ourselves.
+-- Ibid
+#+end_quote
+
+In relationships in general, in those where desire is concerned, the idea of the
+person shrouds the person themselves. The myth constructed in the mind shares in
+all the creator's images, in both love and contempt, and the counterpart
+rejoices and suffers, in both cases perplexed as to the source of these acts
+directed at them.
+
+*** Imagining that frees
+That said, imagination seems to offer both the lock and key to vision. Looked at
+another way: imagination is not a problem at all, but a vehicle.
+- The power of the imagination in opening doors of the Other, rather than
+  closing them.
+
+** A way out?
+It's truly difficult to remain awake. So, /how to/ then?
+
+** Endnotes
+[fn:1] By conformity I mean the active refusal to forge a sense of self of your
+own: a difficult and lifelong process. I don't mean the juvenile notion of conformity
+as difference. Everyone, always, in their essence, is different from
+everyone else.

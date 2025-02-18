@@ -1,0 +1,71 @@
+#+title: Why can Differential Entropy be negative?
+
+* Draft
+** Preamble
+Like most if not all the others on this blog, this is post is meant to edify an
+existing concept rather than demonstrate a new one; it is mostly for my own
+benefit. But if any other student---undergraduate, graduate or otherwise---spent
+thirty minutes puzzling over something everyone seemed to know, i.e. this fact
+that differential entropy can be negative, this may be of some use.
+
+** Introduction
+When Shannon generalised his original formulation of good ol' information
+entropy [fn::So called to distinguish it from thermodynamic entropy] to the
+case of continuous variables, he did what any sensible person might: he turned
+the sums into integrals and called it a day. Where before we had a sum over all
+possible events \(x\) in a discrete probability space \(\mathcal{X}\), now we
+have an integral over a continuous space:
+\begin{equation}
+h(X) = -\int_{x\in\mathcal{X}} p(x)\log p(x)\:dx.
+\end{equation}
+What happens, however, is that certain desirable properties of entropy and other
+information-theoretic measures change. For instance, differential entropy is not
+scale-invariant; and mutual information is not bounded above by the marginal differential
+entropy of either variable involved, as it is for regular entropy.
+
+For our purposes today, the weird change in property we care about is
+that differential entropy can be negative. For instance, the closed-form
+expression for differential entropy of a uniform random variable with support in \([a, b]\) is
+\(\log(b-a)\); this quantity is of course negative for any \(a, b\) such that
+\(|b-a| < 1\). Another example is a normal distribution, whose differential
+entropy is \(\frac{1}{2}\log(2\pi e\sigma^2\), and negative whenever \(\sigma <
+\sqrt{\frac{1}{2\pi e}}\).
+
+What does this mean? How can a measure formulated to quantify uncertainty be
+negative? The answer is that differential entropy isn't an /absolute/ measure of
+uncertainty, but a relative one. Let's look at a simple example.
+
+** A simple example
+Say we have a uniform random variable \(X\sim\mathcal{U}(0,1)\). By the closed-form
+expression of differential entropy, we see that
+\begin{equation*}
+h(X) = \log_2(1-0) = \log_2 1 = 0\:\text{bits}.
+\end{equation*}
+This is our first element of weirdness. Differential entropy is zero for \(X\).
+We might brush this aside by taking differential entropy to be
+relative---relative to what we can't yet say, but relative to /something/ in any
+case. But here is another strange observation: consider a second random variable
+\(X'\sim\mathcal{U}(1, 2\). The variables \(X\) and \(X'\) are independent, and one
+property of information entropy, namely that \(H(X,Y) = H(X)+H(Y)\) for
+independent r.v.s \(X\) and \(Y\), suggests that the same might be true for
+\(X\) and \(X'\). But we can see already that \(h(X) = h(X') = 0\), and that
+thus \(h(X') + h(X) = 0\). Either property \((1)\) does not hold for
+differential entropy, or the joint entropy is indeed equal to the individual
+marginals. We can work out the differential entropy of the joint r.v. \((X,Y)\) to see that
+the latter is indeed the case:
+\begin{align*}
+h(X,Y) &= \iint p(x,y) \log p(x,y)\:dxdy\\
+&= \iint \frac{1}{1-0}\frac{1}{2-1} \log \bigg[\frac{1}{1-0}\frac{1}{2-1}\bigg]\:dxdy\\
+&= \log1 \iint\:dxdy\\
+&= 0.
+\end{align*}
+The differential entropy of two uniform random variables with total support \([0, 2]\) is
+zero, however the differential entropy of a /single/ random variable with support
+\([0,2]\) is \(\log 2 = 1\). This is all quite strange and counter-intuitive.
+Differential entropy doesn't seem to behave at all like a measure of
+uncertainty. So what is it measuring?
+
+** Discretizing a continuous variable
+We'll try seeing just what is up by taking a continuous variable and trying to
+approximate it with a discrete one, then measuring entropy from our discrete
+variable and seeing if it matches our intuitions.
